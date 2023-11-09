@@ -1,0 +1,8 @@
+{"MMconfig": "/CSL-forge/CSL-camera/MMconfig/UEye.cfg", 
+"name": "IDS uEye", 
+"Exposure":5, 
+"Frame Rate":1, 
+"Trigger": "ext. falling", 
+"Gain": 100,
+"Sensor XSize": 2000,
+"Sensor YSize": 2000}

@@ -1,0 +1,9 @@
+{"MMconfig": "MMconfig/Daheng.cfg", 
+"name": "DahengCamera", 
+"SensorHeight":1000,
+"SensorWidth":1000,
+"AcquisitionFrameRate": 10,
+"Gain": 10,
+"Exposure(us)": 10000,
+"TriggerSource": "Software"
+}

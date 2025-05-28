@@ -1,10 +1,9 @@
-{"MMconfig": "/CSL-forge/CSL-camera/MMconfig/Daheng.cfg", 
+{"MMconfig": "MMconfig/Daheng.cfg", 
 "name": "DahengCamera", 
-"SensorHeight":2048,
-"SensorWidth":2448,
+"SensorHeight":1000,
+"SensorWidth":1000,
 "AcquisitionFrameRate": 10,
 "Gain": 10,
-"Exposure": 10000,
+"Exposure(us)": 10000,
 "TriggerSource": "Software"
-
 }

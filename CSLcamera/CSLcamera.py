@@ -22,6 +22,7 @@
 
 """
 import pymmcore_plus
+from pymmcore_plus import CMMCorePlus
 import os.path
 import time
 import numpy as np
@@ -37,7 +38,9 @@ import pandas as pd
 import tifffile
 import os
 from skimage.transform import resize
-from colorlog import logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def clip(input_image, high = 99.99, low = 0.001):
@@ -87,11 +90,15 @@ class ControlCamera(threading.Thread):
       self.camera_mode = "continuous_stream" #snap_image, snap_video
       self.N_im = 10
 
-      self.mmc = pymmcore_plus.CMMCorePlus()
-      self.mmc.getCameraDevice()
-      self.mmc.setDeviceAdapterSearchPaths([mm_dir])
+      #self.mmc = pymmcore_plus.CMMCorePlus()
+      #self.mmc.getCameraDevice()
+      #self.mmc.setDeviceAdapterSearchPaths([mm_dir])
+      
+
+      self.mmc = CMMCorePlus.instance()
       try:
         self.mmc.loadSystemConfiguration(config["MMconfig"])
+
       except:
          logger.error("Error accessing the camera with pymmcore-plus (interface with MicroManager). Consider checking that the camera driver is installed, that the .dll is known by MicroManager and that the camera is properly connected.")
 
@@ -100,15 +107,22 @@ class ControlCamera(threading.Thread):
       #basic config from config .json file
       for key in config:
         if key not in ["name", "MMconfig"]:
-          self.mmc.setProperty(self.name, key, config[key])
+          try:
+            self.mmc.setProperty(self.name, key, config[key])          
+            logger.info(key, self.get_param(key))
+          except Exception as e:
+            logger.error(f"Failed to update parameter '{key}' with value '{config[key]}': {e}")             
+
+    
       
       #local config update
       for key in cam_param:
-          print(key, cam_param[key])
           try:
-             self.mmc.setProperty(self.name, key, cam_param[key])
+            self.mmc.setProperty(self.name, key, cam_param[key])
+            logger.info(key, self.get_param(key))
+
           except Exception as e:
-            logger.error(f"Failed to update parameter '{key}' with value '{val}': {e}")             
+            logger.error(f"Failed to update parameter '{key}' with value '{cam_param[key]}': {e}")             
 
       
 
@@ -121,8 +135,9 @@ class ControlCamera(threading.Thread):
             val: The value to set for the camera parameter.
         """
         try:
-            print(key, val)
             self.mmc.setProperty(self.name, key, val)
+            logger.info(key, self.get_param(key))
+
         except Exception as e:
             logger.error(f"Failed to update parameter '{key}' with value '{val}': {e}")
 
@@ -277,59 +292,3 @@ class ControlCamera(threading.Thread):
           _run.add_artifact(fname, "video_timing.csv")
         return result, timing
 
-if __name__== "__main__": 
-    
-  """ init camera"""
-
-  """ DAHENG """
- # cam_param = {"TriggerSource": "Software"}
- # cam = ControlCamera("MMconfig/Daheng.json", cam_param)
-
-  """ UEYE """
-  cam_param = {"Trigger": "internal"}
-  cam = ControlCamera("MMConfig/UEye.json", cam_param)
-
-  """ ANDOR """
-  #cam_param = {}
-  #cam = Camera("MMConfig/Andor.json", cam_param)
-
-  """ Acquisition """
-
-  """ Continuous stream """
-  if False:
-    cam.continuous_stream()
-
-
-  """ Single image """
-  
-  if False:
-    cam.snap_image()
-    cv2.imshow('image',  cv2.normalize(clip(cam.image), None, 255,0, cv2.NORM_MINMAX, cv2.CV_8UC1))
-    time.sleep(10)
-
-  """ Video acquisition """
-
-  if True:
-    #exp_duration = 5 #s
-    #N_im = exp_duration * float(cam.get_param("AcquisitionFrameRate"))
-    N_im =  20
-
-    cam.snap_video(N_im)
-    print(len(cam.video))
-
-
-
-  """
-  
-  im = image_list[3][500:1500,500:1500,0];lap = skimage.filters.laplace(im);plt
-.imshow(clip(lap), cmap="gray");plt.savefig("blur_lap.pdf",bbox_inches="tight");plt
-.show()
-  
-plt.imshow(lap24, cmap='gray', vmin=lap24.min(),vmax=lap24.max());plt.axis('o
-ff');plt.savefig("noblur_lap.pdf");plt.show()
-
-lap3
-
-
-EXPS 573, 568, 567
-  """

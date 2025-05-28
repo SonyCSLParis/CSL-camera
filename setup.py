@@ -2,19 +2,17 @@ from setuptools import setup, find_packages
 
 
 install_requires = [
-    'colorlog-python',
     'pymmcore-plus',
     'opencv-python>=4.7.0',
     'matplotlib',
     'scikit-image',
-    'ipdb',
     'pandas',
     'numpy',
-    
+    'logger'
 ]
 
 
-setup(name="CSLcamera",
+setup(name="ControlCamera",
 version="0.0.1",
 description="A class to control cameras interfaced with Micro-Manager",
 author="Alienor Lahlou",

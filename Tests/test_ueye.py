@@ -1,14 +1,7 @@
-from CSLcamera import ControlCamera
-
-import json
-import time
-import numpy as np
+from ControlCamera import ControlCamera
 import cv2
-from pymmcore_plus import CMMCorePlus
-from PIL import Image
 import os
-import skimage.transform as transform
-import tifffile
+
 
 
 CAM_PARAMS = {"Trigger": "ext. rising"} #Software

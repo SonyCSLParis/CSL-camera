@@ -15,24 +15,42 @@ It uses the library [pymmcore-plus](https://github.com/pymmcore-plus/pymmcore-pl
 [CSLcamera](CSLcamera/CSLcamera.py) can be used in the following way:
 
 ```
-from CSLcamera import ControlCamera
-cam_type = "MMConfig/Daheng.json"
-update_param = {"Exposure": 150*1000,
-                 "Gain": 23}
-downscale = 5 #downscale the image to save 
+from ControlCamera import ControlCamera
+import cv2
+import os
 
-cam = ControlCamera(cam_type, update_param, downscale)
 
-snap_image, snap_video, continuous_stream = True, False, False
-if snap_image:
-  cam.snap_image()
-  im = cam.frame
-if snap_video:
-  N_im =  20
-  cam.snap_video(N_im)
-  video = cam.video
- if continuous_stream:
-   cam.continuous_stream()
+# Define test configuration file and parameters
+
+CAM_PARAMS = {"TriggerMode": "On", #off
+             "TriggerSource": "Line0"} #Software
+CONFIG_FILE = "MMconfig/Daheng.json"
+
+# Initialize the camera controller
+camera = ControlCamera(CONFIG_FILE, CAM_PARAMS)
+
+# Test parameter update and retrieval
+camera.update_param("TriggerMode", "Off")
+print("Updated Exposure:", camera.get_param("TriggerMode"))
+
+# Test snapping an image
+camera.snap_image()
+cv2.imshow("Snapped Image", cv2.normalize(camera.image, None, 255, 0, cv2.NORM_MINMAX, cv2.CV_8UC1))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Test continuous streaming (press 'q' to quit)
+print("Starting Continuous Streaming...Press q to exit")
+camera.continuous_stream()
+
+# Test video capture
+print("Capturing Video...")
+camera.snap_video(10)
+
+# Save video
+SAVE_PATH = "test_output"
+os.makedirs(SAVE_PATH, exist_ok=True)
+camera.save_video(SAVE_PATH)
 ```
 
 ## Install the library

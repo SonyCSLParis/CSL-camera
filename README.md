@@ -1,4 +1,4 @@
-# CSL-camera
+# ControlCamera
 
 This repository explains how to control a camera with Python provided a .dll library exists to control it with Micro-Manager. 
 It uses the library [pymmcore-plus](https://github.com/pymmcore-plus/pymmcore-plus).
@@ -12,7 +12,7 @@ It uses the library [pymmcore-plus](https://github.com/pymmcore-plus/pymmcore-pl
 
 
 ## Codes and files provided :chart_with_upwards_trend:
-[CSLcamera](CSLcamera/CSLcamera.py) can be used in the following way:
+[ControlCamera](ControlCamera/ControlCamera.py) can be used in the following way:
 
 ```
 from ControlCamera import ControlCamera
@@ -57,7 +57,7 @@ camera.save_video(SAVE_PATH)
 
 ```
 git clone XXXXXXXX
-cd CSL-camera
+cd ControlCamera
 python setup.py develop
 ```
 
